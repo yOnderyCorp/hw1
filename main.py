@@ -1,39 +1,27 @@
-import colorama
-from inspect import getmembers, isclass, isfunction
+result = []
 
-# Инициализация (важно для Windows)
-colorama.init()
+def divider(a, b):
+    # Генерация исключений согласно условию в коде
+    if a < b:
+        raise ValueError("Возбуждено ValueError: a < b")
+    if b > 100:
+        raise IndexError("Возбуждено IndexError: b > 100")
+    return a / b
 
-print(f"{colorama.Fore.CYAN}--- Интроспекция библиотеки Colorama ---{colorama.Style.RESET_ALL}\n")
+# В исходных данных есть ошибка: списки [] не могут быть ключами словаря
+# Исправляем структуру данных (заменяем [] на кортеж или просто удаляем),
+# либо обрабатываем TypeError при создании, но проще исправить входные данные:
+data = {10: 2, 2: 5, "123": 4, 18: 0, 8: 4}
+# Примечание: я убрал [ ]: 15, так как это вызовет ошибку еще до цикла.
 
-# 1. Основные атрибуты через dir()
-all_attributes = dir(colorama)
-print(f"Список всех атрибутов: {all_attributes}\n")
+for key in data:
+    try:
+        # Здесь была опечатка в коде: data[kem] исправлено на data[key]
+        res = divider(key, data[key])
+        result.append(res)
+    except Exception as e:
+        # Вывод типа исключения и сообщения в консоль
+        print(f"Поймано исключение: {type(e).__name__} -> {e}")
 
-# 2. Выделение самых важных атрибутов и методов
-important_stuff = {
-    "Fore": colorama.Fore,  # Цвета текста
-    "Back": colorama.Back,  # Цвета фона
-    "Style": colorama.Style,  # Стили (жирный, яркость и т.д.)
-    "init": colorama.init  # Функция инициализации
-}
-
-print(f"{colorama.Fore.YELLOW}Ключевые компоненты и их описание:{colorama.Style.RESET_ALL}")
-
-for name, obj in important_stuff.items():
-    obj_type = type(obj)
-    print(f"Элемент: {colorama.Fore.GREEN}{name}{colorama.Style.RESET_ALL}")
-    print(f"  - Тип: {obj_type}")
-
-    # Комментарии к работе
-    if name == "init":
-        print("  - Описание: Настраивает терминал для корректного отображения ANSI-кодов (особенно важно в Windows).")
-    elif name in ["Fore", "Back"]:
-        print(
-            f"  - Описание: Содержит набор строковых констант для смены цвета. Доступные цвета: {', '.join([a for a in dir(obj) if not a.startswith('_')])}")
-    elif name == "Style":
-        print("  - Описание: Позволяет изменять яркость (BRIGHT, DIM) или сбрасывать настройки (RESET_ALL).")
-    print("-" * 30)
-
-# Пример работы
-print(f"\n{colorama.Back.BLUE}{colorama.Fore.WHITE} ПРИМЕР: Синий фон, белый текст {colorama.Style.RESET_ALL}")git init
+print("\nФинальный результат (успешные операции):")
+print(result)
